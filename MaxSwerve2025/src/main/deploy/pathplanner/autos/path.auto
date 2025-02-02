@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "path 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "pickup algee"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Path 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot algee"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Path 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "pickup algee"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Test Auto",
+  "choreoAuto": false
+}
