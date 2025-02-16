@@ -13,23 +13,28 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.*;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.Constants.RobotConstants;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+//import com.pathplanner.lib.auto.NamedCommands;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -43,6 +48,8 @@ public class RobotContainer {
         private final VisionSubsystem vision = new VisionSubsystem();
         private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
         private final ElevatorSubsystem ElevatorSubsystem = new ElevatorSubsystem();
+        private final Climber climber = new Climber();
+        private SendableChooser<Command> auto = new SendableChooser<>();
 
         // The driver's controller
         CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -50,18 +57,24 @@ public class RobotContainer {
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
+
+         public void teleopInit() {
+                vision.moveServo(133);
+                vision.UpServo(0);
+         }
+
         public RobotContainer() {
-                // Configure the button bindings
+                // Configure the button bindings`
                 configureButtonBindings();
 
                 SmartDashboard.putData("Toggle Elevator PID", new TogglePID(ElevatorSubsystem));
-                SmartDashboard.putData("Move Elevator Up", new UpdateElevatorPID(ElevatorSubsystem, -1));
-                SmartDashboard.putData("Move Elevator Down", new UpdateElevatorPID(ElevatorSubsystem, 1));
+                SmartDashboard.putData("Move Elevator Up", new UpdateElevatorPID(ElevatorSubsystem, 1));
+                SmartDashboard.putData("Move Elevator Down", new UpdateElevatorPID(ElevatorSubsystem, -1));
                 SmartDashboard.putData("Set Elevator PID", new SetElevatorPID(ElevatorSubsystem, 9999));
 
                 SmartDashboard.putData("Move Elevator Home", new SetElevatorPID(ElevatorSubsystem, 0));
                 
-                SmartDashboard.putData("Move Elevator Top", new SetElevatorPID(ElevatorSubsystem, -90));
+                SmartDashboard.putData("Move Elevator Top", new SetElevatorPID(ElevatorSubsystem, 94));
                 SmartDashboard.putNumber("Set Elevator  Setpoint", 0);
 
                 // Configure default commands
@@ -79,24 +92,44 @@ public class RobotContainer {
                                                                 -MathUtil.applyDeadband(driverController
                                                                                 .getRightTriggerAxis()
                                                                                 - driverController
-                                                                                                .getLeftTriggerAxis(),
+                                                                                           
+                                                                                .getLeftTriggerAxis(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 false,
-                                                                driverController.leftBumper().getAsBoolean()),
-                                                robotDrive));
+                                                              driverController.leftBumper().getAsBoolean()
+                                                              
+                                                               ),
+                                                robotDrive)  );
 
                 SmartDashboard.putData("Toggle Claw PID", new ToggleClawRotatePID(ClawSubsystem));
                 SmartDashboard.putData("Rotate Claw Up", new RotateClaw(ClawSubsystem, 1));
                 SmartDashboard.putData("Rotate Claw Down", new RotateClaw(ClawSubsystem, -1));
 
-                SmartDashboard.putData("Claw Pickup", new SetClawPID(ClawSubsystem, 0.3));
-                SmartDashboard.putData("Claw Drive w Ball", new SetClawPID(ClawSubsystem, 0.42));
-                SmartDashboard.putData("Claw Drive", new SetClawPID(ClawSubsystem, 0.5));
-                SmartDashboard.putData("Claw Shoot", new SetClawPID(ClawSubsystem, 0.5));
+                SmartDashboard.putData("Claw Pickup", new SetClawPID(ClawSubsystem, RobotConstants.ClawRotatePickup));
+                SmartDashboard.putData("Claw Drive w Ball", new SetClawPID(ClawSubsystem, RobotConstants.ClawWithBall));
+                SmartDashboard.putData("Claw Shoot", new SetClawPID(ClawSubsystem, RobotConstants.ClawRotateUp));
+                
+                SmartDashboard.putData("moveServo", new MoveServo(vision));
+                SmartDashboard.putData("UpServo", new UpServo(vision));
 
+                SmartDashboard.putData("Auto Mode", auto);
+               auto.addOption("Auto 1", new PathPlannerAuto("Auto 1"));
+               auto.addOption("Auto 2", new PathPlannerAuto("Auto 2"));
+               auto.addOption("Is gyro weird again", new PathPlannerAuto ("Is gyro weird again"));
+               
+                NamedCommands.registerCommand("Claw Pick Up", new WaitCommand(0.1));
+                NamedCommands.registerCommand("Shoot", new WaitCommand(0.1));
+                NamedCommands.registerCommand("Arm L-1", new WaitCommand(0.1));
+                NamedCommands.registerCommand("Claw Drive", new WaitCommand(0.1));
+                NamedCommands.registerCommand("Arm L-2", new WaitCommand(0.1));
+                NamedCommands.registerCommand("Arm L-3", new WaitCommand(0.1));
+                NamedCommands.registerCommand("Arm Floor", new WaitCommand(0.1));
+                NamedCommands.registerCommand("Arm Shoot", new WaitCommand(0.1));
 
                 ClawSubsystem.ToggleRotatePID();
                 ElevatorSubsystem.TogglePID();
+
+                SmartDashboard.putData(climber);
         }
 
         /**
@@ -113,7 +146,8 @@ public class RobotContainer {
                                 .whileTrue(new RunCommand(
                                                 () -> robotDrive.setX(),
                                                 robotDrive));
-                driverController.back().onTrue(new ResetGyro(robotDrive));
+                driverController.back().onTrue(new ResetGyro(robotDrive)
+                );
                 driverController.povLeft().whileTrue(new CenterOnAprilTag(robotDrive, vision, true)
                                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
                 driverController.povRight().whileTrue(new CenterOnAprilTag(robotDrive, vision, false)
@@ -127,7 +161,9 @@ public class RobotContainer {
                 driverController.x().whileTrue(new ShootClaw(ClawSubsystem));
                 driverController.y().whileTrue(new RunClaw(ClawSubsystem, () -> -0.25));
                 driverController.a().whileTrue(new RunClaw(ClawSubsystem, () -> 0.25));
-        }
+                driverController.b().whileTrue(new RunClaw(ClawSubsystem, () -> 0.05));
+                driverController.start().whileTrue(new DoTheClimb(climber));
+        }       
 
         /**
          * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -136,7 +172,8 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
 
-                return new RunCommand(() -> robotDrive.drive(0, 0, 0, false, false), robotDrive);
+                return auto.getSelected();
+                //return new RunCommand(() -> robotDrive.drive(0, 0, 0, false, false), robotDrive);
                 // // Create config for trajectory
                 // TrajectoryConfig config = new TrajectoryConfig(
                 // AutoConstants.kMaxSpeedMetersPerSecond,

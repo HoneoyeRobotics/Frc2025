@@ -18,12 +18,13 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CanIDs;
 
 public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
-    leftElevator = new SparkMax(34, MotorType.kBrushless);
-    rightElevator = new SparkMax(33, MotorType.kBrushless);
+    leftElevator = new SparkMax(CanIDs.leftElevator, MotorType.kBrushless);
+    rightElevator = new SparkMax(CanIDs.rightElevator, MotorType.kBrushless);
 
     SparkMaxConfig leftConfig = new SparkMaxConfig();
     leftConfig.idleMode(IdleMode.kBrake);

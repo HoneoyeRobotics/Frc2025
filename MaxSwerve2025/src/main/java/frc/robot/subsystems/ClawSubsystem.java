@@ -14,25 +14,27 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CanIDs;
+import frc.robot.Constants.RobotConstants;
 
 public class ClawSubsystem extends SubsystemBase {
   /** Creates a new Claw. */
   public ClawSubsystem() {
-    lowerClawMotor.setNeutralMode(NeutralModeValue.Brake);
-    lowerClawMotor.setInverted(true);
 
     upperClawMotor.setNeutralMode(NeutralModeValue.Brake);
+    upperClawMotor.setInverted(true);
+
     rotatePidController.setSetpoint(RotatePIDSetpoint);
 
   }
 
-  private final SparkMax rotateMotor = new SparkMax(19, MotorType.kBrushless);
-  private final TalonFX upperClawMotor = new TalonFX(7);
-  private final TalonFX lowerClawMotor = new TalonFX(8);
+  private final SparkMax rotateMotor = new SparkMax(CanIDs.rotateClawMotor, MotorType.kBrushless);
+  private final TalonFX upperClawMotor = new TalonFX(CanIDs.upperClawMotor);
+
 
   public void run(double speed) {
     upperClawMotor.set(speed);
-    lowerClawMotor.set(speed);
+    
   }
 
   public AnalogInput algaeSensor = new AnalogInput(1);
@@ -49,7 +51,7 @@ public class ClawSubsystem extends SubsystemBase {
 
   private PIDController rotatePidController = new PIDController(2, 0, 0);
   private boolean EnableRotatePID = false;
-  private double RotatePIDSetpoint = 0.50;
+  private double RotatePIDSetpoint = RobotConstants.ClawRotateUp;
 
   public void ToggleRotatePID() {
     if (EnableRotatePID == true) {
@@ -78,8 +80,8 @@ public class ClawSubsystem extends SubsystemBase {
     // 0 to 0.3
     if (RotatePIDSetpoint < 0)
       RotatePIDSetpoint = 0;
-    else if (RotatePIDSetpoint > 0.7)
-      RotatePIDSetpoint = 0.7;
+    else if (RotatePIDSetpoint > 0.95)
+      RotatePIDSetpoint = 0.95;
 
       
     rotatePidController.setSetpoint(RotatePIDSetpoint);
@@ -93,7 +95,7 @@ public class ClawSubsystem extends SubsystemBase {
 
 
     if (EnableRotatePID == true) {
-      RotateSpeed = rotatePidController.calculate(position) * -1;
+      RotateSpeed = rotatePidController.calculate(position) * 1;
       rotateMotor.set(RotateSpeed);
       SmartDashboard.putNumber("Claw Speed", RotateSpeed);
 
@@ -103,5 +105,7 @@ public class ClawSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Claw Setpoint", rotatePidController.getSetpoint());
     SmartDashboard.putBoolean("Algae", algaeCheck());
     SmartDashboard.putNumber("Algae Value", algaeSensor.getValue());
+    SmartDashboard.putNumber("Falcon Position", upperClawMotor.getPosition().getValueAsDouble());
+
   }
 }

@@ -29,9 +29,9 @@ public final class Constants {
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(26.5);
+    public static final double kTrackWidth = Units.inchesToMeters(26);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(26.5);
+    public static final double kWheelBase = Units.inchesToMeters(26);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -56,21 +56,18 @@ public final class Constants {
     // public static final int kFrontRightTurningCanId = 13;
     // public static final int kRearRightTurningCanId = 12;
 
-
     public static final int kFrontLeftDrivingCanId = 26;
     public static final int kFrontLeftTurningCanId = 13;
 
     public static final int kFrontRightDrivingCanId = 24;
     public static final int kFrontRightTurningCanId = 12;
 
-    public static final int kRearLeftDrivingCanId = 21;
+    public static final int kRearLeftDrivingCanId = 25;
     public static final int kRearLeftTurningCanId = 20;
-    
+
     public static final int kRearRightDrivingCanId = 23;
     public static final int kRearRightTurningCanId = 22;
 
-
-        
     public static final boolean kGyroReversed = false;
   }
 
@@ -78,7 +75,7 @@ public final class Constants {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
     // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
     // more teeth will result in a robot that drives faster).
-    public static final int kDrivingMotorPinionTeeth = 14;
+    public static final int kDrivingMotorPinionTeeth = 13;
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
@@ -89,6 +86,25 @@ public final class Constants {
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
+  }
+
+  public static final class CanIDs {
+    public static final int leftElevator = 34;
+    public static final int rightElevator = 33;
+    
+    
+    public static final int rotateClawMotor = 19;
+    public static final int upperClawMotor = 7;
+
+    public static final int backClimber = 9;
+    public static final int frontClimber = 8;
+  }
+
+
+  public static final class RobotConstants{
+    public static final double ClawRotateUp = 0.68;
+    public static final double ClawRotatePickup = 0.46;
+    public static final double ClawWithBall = 0.58; 
   }
 
   public static final class OIConstants {

@@ -4,40 +4,38 @@
 
 package frc.robot.Commands;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.Climber;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ShootClaw extends Command {
-  /** Creates a new RunClaw. */
-  private final ClawSubsystem clawSubsystem;
-
-  public ShootClaw(ClawSubsystem clawSubsystem) {
+public class DoTheClimb extends Command {
+  /** Creates a new DoTheClimb. */
+  private Climber climber;
+  public DoTheClimb(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.clawSubsystem = clawSubsystem;
+    this.climber = climber;
+    addRequirements(climber);
+    
+    SmartDashboard.putNumber("ClimbSpeed", 0.2);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawSubsystem.run(Preferences.getDouble("ShootSpeed", -1));
+    climber.Move(SmartDashboard.getNumber("ClimbSpeed", 0.2));
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
-    clawSubsystem.run(0);
+climber.Move(0);
 
   }
 
