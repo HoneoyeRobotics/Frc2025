@@ -32,7 +32,7 @@ public class RunClaw extends Command {
     double speed = axis.getAsDouble();
     if(clawSubsystem.algaeCheck() && axis.getAsDouble() > 0)
       speed = 0;
-    clawSubsystem.runClaw(speed);
+    clawSubsystem.runClaw(speed, false);
 
   }
 
@@ -40,7 +40,7 @@ public class RunClaw extends Command {
   @Override
   public void end(boolean interrupted) {
     
-    clawSubsystem.runClaw(0);
+    clawSubsystem.runClaw(0, true);
 
   }
 

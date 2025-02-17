@@ -38,6 +38,8 @@ public class ClawevatorSubsystem extends SubsystemBase {
   public boolean algae = false;
 
   private PIDController rotatePidController = new PIDController(2, 0, 0);
+  private PIDController clawHoldPidController = new PIDController(2, 0, 0);
+  private boolean EnableClawHoldPID = false;
   private boolean EnableRotatePID = false;
   private double RotatePIDSetpoint = RobotConstants.ClawRotateUp;
 
@@ -73,7 +75,12 @@ public class ClawevatorSubsystem extends SubsystemBase {
 
 
 
-  public void runClaw(double speed) {
+  public void runClaw(double speed, boolean EnablePID) {
+    if(EnablePID == true && EnableClawHoldPID == false){
+      clawHoldPidController.setSetpoint(upperClawMotor.getPosition().getValueAsDouble());
+    }
+    
+    EnableClawHoldPID = EnablePID;
     upperClawMotor.set(speed);
     
   }
@@ -167,6 +174,12 @@ public class ClawevatorSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Claw Speed", RotateSpeed);
 
     }
+
+    if (EnableClawHoldPID == true){
+      runClaw(clawHoldPidController.calculate(upperClawMotor.getPosition().getValueAsDouble()), true);
+    }
+
+
     //elevator periodic functions
 
     elevatorPIDContorller.setP(Preferences.getDouble("P", 0.2));

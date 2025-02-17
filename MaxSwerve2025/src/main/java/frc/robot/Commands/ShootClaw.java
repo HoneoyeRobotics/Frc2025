@@ -25,7 +25,7 @@ public class ShootClaw extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawSubsystem.runClaw(Preferences.getDouble("ShootSpeed", -1));
+    clawSubsystem.runClaw(Preferences.getDouble("ShootSpeed", -1), false);
 
   }
 
@@ -33,7 +33,7 @@ public class ShootClaw extends Command {
   @Override
   public void end(boolean interrupted) {
     
-    clawSubsystem.runClaw(0);
+    clawSubsystem.runClaw(0, true);
 
   }
 
