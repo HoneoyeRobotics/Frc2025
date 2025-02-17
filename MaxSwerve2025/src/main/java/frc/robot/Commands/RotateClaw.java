@@ -4,22 +4,17 @@
 
 package frc.robot.Commands;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants;
-import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ClawevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RotateClaw extends InstantCommand {
   /** Creates a new RunClaw. */
-  private final ClawSubsystem clawSubsystem;
+  private final ClawevatorSubsystem clawSubsystem;
   private final double modifier;
 
-  public RotateClaw(ClawSubsystem clawSubsystem, double modifier) {
+  public RotateClaw(ClawevatorSubsystem clawSubsystem, double modifier) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.clawSubsystem = clawSubsystem;
     this.modifier = modifier;
@@ -30,7 +25,7 @@ public class RotateClaw extends InstantCommand {
   public void initialize() {
     double setpoint = Preferences.getDouble("RotateMoveValue", 0.05);
     setpoint *= modifier;
-    clawSubsystem.AdjustRotatePosition(setpoint);
+    clawSubsystem.AdjustClawRotatePosition(setpoint);
   }
 
 }

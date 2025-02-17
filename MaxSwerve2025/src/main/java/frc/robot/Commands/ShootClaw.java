@@ -4,20 +4,16 @@
 
 package frc.robot.Commands;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ClawevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ShootClaw extends Command {
   /** Creates a new RunClaw. */
-  private final ClawSubsystem clawSubsystem;
+  private final ClawevatorSubsystem clawSubsystem;
 
-  public ShootClaw(ClawSubsystem clawSubsystem) {
+  public ShootClaw(ClawevatorSubsystem clawSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.clawSubsystem = clawSubsystem;
   }
@@ -29,7 +25,7 @@ public class ShootClaw extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawSubsystem.run(Preferences.getDouble("ShootSpeed", -1));
+    clawSubsystem.runClaw(Preferences.getDouble("ShootSpeed", -1));
 
   }
 
@@ -37,7 +33,7 @@ public class ShootClaw extends Command {
   @Override
   public void end(boolean interrupted) {
     
-    clawSubsystem.run(0);
+    clawSubsystem.runClaw(0);
 
   }
 

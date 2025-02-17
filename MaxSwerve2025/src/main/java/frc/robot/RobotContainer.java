@@ -5,32 +5,18 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.*;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.List;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -46,8 +32,7 @@ public class RobotContainer {
         // The robot's subsystems
         private final DriveSubsystem robotDrive = new DriveSubsystem();
         private final VisionSubsystem vision = new VisionSubsystem();
-        private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
-        private final ElevatorSubsystem ElevatorSubsystem = new ElevatorSubsystem();
+        private final ClawevatorSubsystem ClawevatorSubsystem = new ClawevatorSubsystem();
         private final Climber climber = new Climber();
         private SendableChooser<Command> auto = new SendableChooser<>();
 
@@ -67,14 +52,14 @@ public class RobotContainer {
                 // Configure the button bindings`
                 configureButtonBindings();
 
-                SmartDashboard.putData("Toggle Elevator PID", new TogglePID(ElevatorSubsystem));
-                SmartDashboard.putData("Move Elevator Up", new UpdateElevatorPID(ElevatorSubsystem, 1));
-                SmartDashboard.putData("Move Elevator Down", new UpdateElevatorPID(ElevatorSubsystem, -1));
-                SmartDashboard.putData("Set Elevator PID", new SetElevatorPID(ElevatorSubsystem, 9999));
+                SmartDashboard.putData("Toggle Elevator PID", new TogglePID(ClawevatorSubsystem));
+                SmartDashboard.putData("Move Elevator Up", new UpdateElevatorPID(ClawevatorSubsystem, 1));
+                SmartDashboard.putData("Move Elevator Down", new UpdateElevatorPID(ClawevatorSubsystem, -1));
+                SmartDashboard.putData("Set Elevator PID", new SetElevatorPID(ClawevatorSubsystem, 9999));
 
-                SmartDashboard.putData("Move Elevator Home", new SetElevatorPID(ElevatorSubsystem, 0));
+                SmartDashboard.putData("Move Elevator Home", new SetElevatorPID(ClawevatorSubsystem, 0));
                 
-                SmartDashboard.putData("Move Elevator Top", new SetElevatorPID(ElevatorSubsystem, 94));
+                SmartDashboard.putData("Move Elevator Top", new SetElevatorPID(ClawevatorSubsystem, 94));
                 SmartDashboard.putNumber("Set Elevator  Setpoint", 0);
 
                 // Configure default commands
@@ -101,13 +86,13 @@ public class RobotContainer {
                                                                ),
                                                 robotDrive)  );
 
-                SmartDashboard.putData("Toggle Claw PID", new ToggleClawRotatePID(ClawSubsystem));
-                SmartDashboard.putData("Rotate Claw Up", new RotateClaw(ClawSubsystem, 1));
-                SmartDashboard.putData("Rotate Claw Down", new RotateClaw(ClawSubsystem, -1));
+                SmartDashboard.putData("Toggle Claw PID", new ToggleClawRotatePID(ClawevatorSubsystem));
+                SmartDashboard.putData("Rotate Claw Up", new RotateClaw(ClawevatorSubsystem, 1));
+                SmartDashboard.putData("Rotate Claw Down", new RotateClaw(ClawevatorSubsystem, -1));
 
-                SmartDashboard.putData("Claw Pickup", new SetClawPID(ClawSubsystem, RobotConstants.ClawRotatePickup));
-                SmartDashboard.putData("Claw Drive w Ball", new SetClawPID(ClawSubsystem, RobotConstants.ClawWithBall));
-                SmartDashboard.putData("Claw Shoot", new SetClawPID(ClawSubsystem, RobotConstants.ClawRotateUp));
+                SmartDashboard.putData("Claw Pickup", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotatePickup));
+                SmartDashboard.putData("Claw Drive w Ball", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawWithBall));
+                SmartDashboard.putData("Claw Shoot", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateUp));
                 
                 SmartDashboard.putData("moveServo", new MoveServo(vision));
                 SmartDashboard.putData("UpServo", new UpServo(vision));
@@ -126,8 +111,8 @@ public class RobotContainer {
                 NamedCommands.registerCommand("Arm Floor", new WaitCommand(0.1));
                 NamedCommands.registerCommand("Arm Shoot", new WaitCommand(0.1));
 
-                ClawSubsystem.ToggleRotatePID();
-                ElevatorSubsystem.TogglePID();
+                ClawevatorSubsystem.ToggleClawRotatePID();
+                ClawevatorSubsystem.ToggleElevatorPID();
 
                 SmartDashboard.putData(climber);
         }
@@ -154,14 +139,14 @@ public class RobotContainer {
                                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
 
                 driverController.axisGreaterThan(5, 0)
-                                .whileTrue(new RunElevator(ElevatorSubsystem, () -> driverController.getRightY()));
+                                .whileTrue(new RunElevator(ClawevatorSubsystem, () -> driverController.getRightY()));
                 driverController.axisLessThan(5, 0)
-                                .whileTrue(new RunElevator(ElevatorSubsystem, () -> driverController.getRightY()));
+                                .whileTrue(new RunElevator(ClawevatorSubsystem, () -> driverController.getRightY()));
 
-                driverController.x().whileTrue(new ShootClaw(ClawSubsystem));
-                driverController.y().whileTrue(new RunClaw(ClawSubsystem, () -> -0.25));
-                driverController.a().whileTrue(new RunClaw(ClawSubsystem, () -> 0.25));
-                driverController.b().whileTrue(new RunClaw(ClawSubsystem, () -> 0.05));
+                driverController.x().whileTrue(new ShootClaw(ClawevatorSubsystem));
+                driverController.y().whileTrue(new RunClaw(ClawevatorSubsystem, () -> -0.25));
+                driverController.a().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.25));
+                driverController.b().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.05));
                 driverController.start().whileTrue(new DoTheClimb(climber));
         }       
 

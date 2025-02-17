@@ -6,15 +6,15 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ClawevatorSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetElevatorPID extends InstantCommand {
-  private final ElevatorSubsystem elevatorSubsystem;
+  private final ClawevatorSubsystem elevatorSubsystem;
   private final double position;
-  public SetElevatorPID(ElevatorSubsystem elevatorSubsystem, double Position) {
+  public SetElevatorPID(ClawevatorSubsystem elevatorSubsystem, double Position) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.elevatorSubsystem = elevatorSubsystem;
     this.position = Position;
@@ -30,6 +30,6 @@ public class SetElevatorPID extends InstantCommand {
       SmartDashboard.putNumber("Set Elevator  Setpoint", targetPosition);
     }
 
-    elevatorSubsystem.SetSetpoint(targetPosition);
+    elevatorSubsystem.SetElevatorSetpoint(targetPosition);
   }
 }

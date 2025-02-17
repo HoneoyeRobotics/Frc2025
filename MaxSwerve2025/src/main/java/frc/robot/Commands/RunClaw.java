@@ -7,14 +7,14 @@ package frc.robot.Commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ClawevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RunClaw extends Command {
   /** Creates a new RunClaw. */
-  private final ClawSubsystem clawSubsystem;
+  private final ClawevatorSubsystem clawSubsystem;
   private final DoubleSupplier axis;
-  public RunClaw(ClawSubsystem clawSubsystem, DoubleSupplier axis) {
+  public RunClaw(ClawevatorSubsystem clawSubsystem, DoubleSupplier axis) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.clawSubsystem = clawSubsystem;
     this.axis = axis;
@@ -32,7 +32,7 @@ public class RunClaw extends Command {
     double speed = axis.getAsDouble();
     if(clawSubsystem.algaeCheck() && axis.getAsDouble() > 0)
       speed = 0;
-    clawSubsystem.run(speed);
+    clawSubsystem.runClaw(speed);
 
   }
 
@@ -40,7 +40,7 @@ public class RunClaw extends Command {
   @Override
   public void end(boolean interrupted) {
     
-    clawSubsystem.run(0);
+    clawSubsystem.runClaw(0);
 
   }
 

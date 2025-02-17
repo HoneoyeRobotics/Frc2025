@@ -4,21 +4,16 @@
 
 package frc.robot.Commands;
 
-import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants;
-import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ClawevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ToggleClawRotatePID extends InstantCommand {
   /** Creates a new RunClaw. */
-  private final ClawSubsystem clawSubsystem;
+  private final ClawevatorSubsystem clawSubsystem;
 
-  public ToggleClawRotatePID(ClawSubsystem clawSubsystem) {
+  public ToggleClawRotatePID(ClawevatorSubsystem clawSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.clawSubsystem = clawSubsystem;
   }
@@ -27,7 +22,7 @@ public class ToggleClawRotatePID extends InstantCommand {
   @Override
   public void initialize() {
 
-    clawSubsystem.ToggleRotatePID();
+    clawSubsystem.ToggleClawRotatePID();
   }
 
 }

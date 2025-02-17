@@ -8,14 +8,14 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ClawevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RunElevator extends Command {
   /** Creates a new RunElevator. */
-  private final ElevatorSubsystem ElevatorSubsystem;
+  private final ClawevatorSubsystem ElevatorSubsystem;
   private final DoubleSupplier axis;
-  public RunElevator(ElevatorSubsystem ElevatorSubsystem, DoubleSupplier axis) {
+  public RunElevator(ClawevatorSubsystem ElevatorSubsystem, DoubleSupplier axis) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.ElevatorSubsystem = ElevatorSubsystem;
     this.axis = axis;
@@ -38,7 +38,7 @@ public class RunElevator extends Command {
       speed = max;
     else if (speed < 0 && speed < -max)
       speed = -max;
-    ElevatorSubsystem.run(speed);
+    ElevatorSubsystem.runElevator(speed);
 
   }
 
@@ -46,7 +46,7 @@ public class RunElevator extends Command {
   @Override
   public void end(boolean interrupted) {
     
-    ElevatorSubsystem.run(0);
+    ElevatorSubsystem.runElevator(0);
 
   }
 
