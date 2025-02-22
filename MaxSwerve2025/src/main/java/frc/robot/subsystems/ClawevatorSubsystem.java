@@ -37,11 +37,11 @@ public class ClawevatorSubsystem extends SubsystemBase {
 
   public boolean algae = false;
 
-  private PIDController rotatePidController = new PIDController(2, 0, 0);
-  private PIDController clawHoldPidController = new PIDController(2, 0, 0);
+  private PIDController rotatePidController = new PIDController(0.5, 0, 0);
+  private PIDController clawHoldPidController = new PIDController(0.2, 0, 0);
   private boolean EnableClawHoldPID = false;
   private boolean EnableRotatePID = false;
-  private double RotatePIDSetpoint = RobotConstants.ClawRotateUp;
+  private double RotatePIDSetpoint = RobotConstants.ClawRotateHome;
 
 
   /** Creates a new ElevatorSubsystem. */
@@ -64,7 +64,7 @@ public class ClawevatorSubsystem extends SubsystemBase {
     rightElevator.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     leftElevator.getEncoder().setPosition(0.0);
-    elevatorPIDContorller = new PIDController(0.4, 0, 0);
+    elevatorPIDContorller = new PIDController(0.1, 0, 0);
     elevatorPIDContorller.setSetpoint(0.0);
     elevatorPIDContorller.setTolerance(0.5);
 
@@ -78,6 +78,7 @@ public class ClawevatorSubsystem extends SubsystemBase {
   public void runClaw(double speed, boolean EnablePID) {
     if(EnablePID == true && EnableClawHoldPID == false){
       clawHoldPidController.setSetpoint(upperClawMotor.getPosition().getValueAsDouble());
+      SmartDashboard.putNumber("Claw Hold PID Setpoint", clawHoldPidController.getSetpoint());
     }
     
     EnableClawHoldPID = EnablePID;
@@ -141,9 +142,9 @@ public class ClawevatorSubsystem extends SubsystemBase {
     if (EnablePID == false) {
       EnablePID = true;
       elevatorPIDContorller.setSetpoint(leftElevator.getEncoder().getPosition());
-      elevatorPIDContorller.setP(Preferences.getDouble("ElevatorP", 0.2));
-      elevatorPIDContorller.setI(Preferences.getDouble("ElevatorI", 0));
-      elevatorPIDContorller.setD(Preferences.getDouble("ElevatorD", 0));
+      // elevatorPIDContorller.setP(Preferences.getDouble("ElevatorP", 0.2));
+      // elevatorPIDContorller.setI(Preferences.getDouble("ElevatorI", 0));
+      // elevatorPIDContorller.setD(Preferences.getDouble("ElevatorD", 0));
 
     } else {
       EnablePID = false;
@@ -175,16 +176,16 @@ public class ClawevatorSubsystem extends SubsystemBase {
 
     }
 
-    if (EnableClawHoldPID == true){
-      runClaw(clawHoldPidController.calculate(upperClawMotor.getPosition().getValueAsDouble()), true);
-    }
+    // if (EnableClawHoldPID == true){
+    //   runClaw(clawHoldPidController.calculate(upperClawMotor.getPosition().getValueAsDouble()), true);
+    // }
 
 
     //elevator periodic functions
 
-    elevatorPIDContorller.setP(Preferences.getDouble("P", 0.2));
-    elevatorPIDContorller.setI(Preferences.getDouble("I", 0));
-    elevatorPIDContorller.setD(Preferences.getDouble("D", 0));
+    // elevatorPIDContorller.setP(Preferences.getDouble("P", 0.1));
+    // elevatorPIDContorller.setI(Preferences.getDouble("I", 0));
+    // elevatorPIDContorller.setD(Preferences.getDouble("D", 0));
 
     if(elevatorAtBottom() && ElevatorSetpoint == 0 && leftElevator.getEncoder().getPosition() != 0) {
       leftElevator.getEncoder().setPosition(0);

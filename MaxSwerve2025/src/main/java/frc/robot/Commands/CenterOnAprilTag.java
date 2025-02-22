@@ -6,6 +6,7 @@ package frc.robot.Commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -30,6 +31,7 @@ public class CenterOnAprilTag extends Command {
   @Override
   public void initialize() {
     pid = new PIDController(0.1, 0.001, 0);
+    visionSubsystem.setDriveServo(RobotConstants.DriveServoBottom);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -68,6 +70,7 @@ public class CenterOnAprilTag extends Command {
   public void end(boolean interrupted) {
     driveSubsystem.drive(0, 0, 0, false, false);
 
+    visionSubsystem.setDriveServo(RobotConstants.DriveServoStraight);
   }
 
   // Returns true when the command should end.

@@ -91,8 +91,7 @@ public final class Constants {
   public static final class CanIDs {
     public static final int leftElevator = 34;
     public static final int rightElevator = 33;
-    
-    
+
     public static final int rotateClawMotor = 19;
     public static final int upperClawMotor = 7;
 
@@ -100,11 +99,44 @@ public final class Constants {
     public static final int frontClimber = 8;
   }
 
-
-  public static final class RobotConstants{
-    public static final double ClawRotateUp = 0.68;
+  public static final class RobotConstants {
+    public static final double ClawRotateHome = 0.7;
     public static final double ClawRotatePickup = 0.46;
-    public static final double ClawWithBall = 0.58; 
+    public static final double ClawRotateDrive = 0.58;
+    public static final double ClawRotateShoot = 0.65;
+    public static final double ClawRotateAlgaeStacked = 0.05;
+    public static final double ClawRotateAlgae1 = 0.53;
+    public static final double ClawRotateAlgae2 = 0.55;
+    public static final double ClawRotateCoral3 = 0.53;
+    public static final double ClawRotateCoral2 = 0.55;
+
+    public static final double ClawElevatorHome = 0;
+    public static final double ClawElevatorPickup = 0;
+    public static final double ClawElevatorDrive = 0;
+    public static final double ClawElevatorShoot = 100;
+    public static final double ClawElevatorAlgaeStacked = 11;
+    public static final double ClawElevatorAlgae1 = 26;
+    public static final double ClawElevatorAlgae2  = 55;
+    public static final double ClawElevatorCoral3= 26;
+    public static final double ClawElevatorCoral2  = 55;
+
+    public static final double DriveServoStraight = 0.6;
+    public static final double DriveServoBottom = 0.75;
+
+    // public static final double[] ClawPositions = new double[]{
+    // ClawRotatePickup,
+    // ClawWithBall,
+    // ClawRotateUp
+    // };
+
+    // public static final double[] ElevatorPositions = new double[]{
+    // 0,
+    // 25,
+    // 50,
+    // 75,
+    // 100,
+    // };
+
   }
 
   public static final class OIConstants {

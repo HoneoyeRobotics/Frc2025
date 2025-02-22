@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.util.PixelFormat;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,6 +19,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -38,29 +43,26 @@ public class RobotContainer {
 
         // The driver's controller
         CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+        CommandJoystick buttonBoard = new CommandJoystick(1);
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
 
-         public void teleopInit() {
-                vision.moveServo(133);
-                vision.UpServo(0);
-         }
+        public void teleopInit() {
+                // vision.moveServo(133);
+                // vision.moveServo(0);
+        }
 
         public RobotContainer() {
+                UsbCamera camera = CameraServer.startAutomaticCapture();
+                // camera.setResolution(640, 360   );
+                //   camera.setVideoMode(PixelFormat.kMJPEG, 640, 360, 15);
+
+                //   camera.setExposureManual(10);
+                //   camera.setWhiteBalanceManual(50);
                 // Configure the button bindings`
                 configureButtonBindings();
-
-                SmartDashboard.putData("Toggle Elevator PID", new TogglePID(ClawevatorSubsystem));
-                SmartDashboard.putData("Move Elevator Up", new UpdateElevatorPID(ClawevatorSubsystem, 1));
-                SmartDashboard.putData("Move Elevator Down", new UpdateElevatorPID(ClawevatorSubsystem, -1));
-                SmartDashboard.putData("Set Elevator PID", new SetElevatorPID(ClawevatorSubsystem, 9999));
-
-                SmartDashboard.putData("Move Elevator Home", new SetElevatorPID(ClawevatorSubsystem, 0));
-                
-                SmartDashboard.putData("Move Elevator Top", new SetElevatorPID(ClawevatorSubsystem, 94));
-                SmartDashboard.putNumber("Set Elevator  Setpoint", 0);
 
                 // Configure default commands
                 robotDrive.setDefaultCommand(
@@ -77,31 +79,58 @@ public class RobotContainer {
                                                                 -MathUtil.applyDeadband(driverController
                                                                                 .getRightTriggerAxis()
                                                                                 - driverController
-                                                                                           
-                                                                                .getLeftTriggerAxis(),
+
+                                                                                                .getLeftTriggerAxis(),
                                                                                 OIConstants.kDriveDeadband),
-                                                                false,
-                                                              driverController.leftBumper().getAsBoolean()
-                                                              
-                                                               ),
-                                                robotDrive)  );
+                                                                true,
+                                                                driverController.leftBumper().getAsBoolean()
+
+                                                ),
+                                                robotDrive));
 
                 SmartDashboard.putData("Toggle Claw PID", new ToggleClawRotatePID(ClawevatorSubsystem));
                 SmartDashboard.putData("Rotate Claw Up", new RotateClaw(ClawevatorSubsystem, 1));
                 SmartDashboard.putData("Rotate Claw Down", new RotateClaw(ClawevatorSubsystem, -1));
 
-                SmartDashboard.putData("Claw Pickup", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotatePickup));
-                SmartDashboard.putData("Claw Drive w Ball", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawWithBall));
-                SmartDashboard.putData("Claw Shoot", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateUp));
-                
-                SmartDashboard.putData("moveServo", new MoveServo(vision));
-                SmartDashboard.putData("UpServo", new UpServo(vision));
+                SmartDashboard.putData("Toggle Elevator PID", new TogglePID(ClawevatorSubsystem));
+                SmartDashboard.putData("Move Elevator Up", new UpdateElevatorPID(ClawevatorSubsystem, 1));
+                SmartDashboard.putData("Move Elevator Down", new UpdateElevatorPID(ClawevatorSubsystem, -1));
+                SmartDashboard.putData("Set Elevator PID", new SetElevatorPID(ClawevatorSubsystem, 9999));
+                SmartDashboard.putNumber("Set Elevator  Setpoint", 0);
 
+                SmartDashboard.putData("Claw Pickup",
+                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotatePickup));
+                SmartDashboard.putData("Claw Drive ",
+                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateDrive));
+                SmartDashboard.putData("Claw Shoot",
+                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateShoot));
+                SmartDashboard.putData("Claw Home", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateHome));
+                SmartDashboard.putData("Claw Algae 1",
+                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae1));
+                SmartDashboard.putData("Claw Algae 2",
+                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae2));
+
+                SmartDashboard.putData("Move Elevator Home",
+                                new SetElevatorPID(ClawevatorSubsystem, RobotConstants.ClawElevatorHome));
+                SmartDashboard.putData("Move Elevator Top",
+                                new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorShoot));
+                SmartDashboard.putData("Move Elevator Algae 1",
+                                new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae1));
+                SmartDashboard.putData("Move Elevator Algae 2",
+                                new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae2));
+
+                SmartDashboard.putData("moveServo", new MoveServo(vision));
+                SmartDashboard.putData("ServoUp", new MoveDriveServo(vision, -0.01));
+
+                SmartDashboard.putData("ServoDown", new MoveDriveServo(vision, 0.01));
+                SmartDashboard.putData("ServoStraight", new SetDriveServo(vision, RobotConstants.DriveServoStraight));
+
+                SmartDashboard.putData("ServoBottom", new SetDriveServo(vision, RobotConstants.DriveServoBottom));
                 SmartDashboard.putData("Auto Mode", auto);
-               auto.addOption("Auto 1", new PathPlannerAuto("Auto 1"));
-               auto.addOption("Auto 2", new PathPlannerAuto("Auto 2"));
-               auto.addOption("Is gyro weird again", new PathPlannerAuto ("Is gyro weird again"));
-               
+                auto.addOption("Auto 1", new PathPlannerAuto("Auto 1"));
+                auto.addOption("Auto 2", new PathPlannerAuto("Auto 2"));
+                auto.addOption("Is gyro weird again", new PathPlannerAuto("Is gyro weird again"));
+
                 NamedCommands.registerCommand("Claw Pick Up", new WaitCommand(0.1));
                 NamedCommands.registerCommand("Shoot", new WaitCommand(0.1));
                 NamedCommands.registerCommand("Arm L-1", new WaitCommand(0.1));
@@ -131,24 +160,60 @@ public class RobotContainer {
                                 .whileTrue(new RunCommand(
                                                 () -> robotDrive.setX(),
                                                 robotDrive));
-                driverController.back().onTrue(new ResetGyro(robotDrive)
-                );
+                driverController.back().onTrue(new ResetGyro(robotDrive));
                 driverController.povLeft().whileTrue(new CenterOnAprilTag(robotDrive, vision, true)
                                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
                 driverController.povRight().whileTrue(new CenterOnAprilTag(robotDrive, vision, false)
                                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
 
-                driverController.axisGreaterThan(5, 0)
-                                .whileTrue(new RunElevator(ClawevatorSubsystem, () -> driverController.getRightY()));
-                driverController.axisLessThan(5, 0)
-                                .whileTrue(new RunElevator(ClawevatorSubsystem, () -> driverController.getRightY()));
+                // driverController.axisGreaterThan(5, 0)
+                // .whileTrue(new RunElevator(ClawevatorSubsystem, () ->
+                // driverController.getRightY()));
+                // driverController.axisLessThan(5, 0)
+                // .whileTrue(new RunElevator(ClawevatorSubsystem, () ->
+                // driverController.getRightY()));
 
                 driverController.x().whileTrue(new ShootClaw(ClawevatorSubsystem));
                 driverController.y().whileTrue(new RunClaw(ClawevatorSubsystem, () -> -0.25));
-                driverController.a().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.25));
+                driverController.a().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.5));
                 driverController.b().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.05));
                 driverController.start().whileTrue(new DoTheClimb(climber));
-        }       
+
+
+                //coral level 3
+                buttonBoard.button(4).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateCoral3)
+                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorCoral3)));
+                //coral level 2
+                buttonBoard.button(5).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateCoral2)
+                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawRotateCoral2)));
+                //algae level 1
+                buttonBoard.button(8).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae1)
+                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae1)));
+                //algae level 2
+                buttonBoard.button(7).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae2)
+                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae2)));
+                //drive
+                buttonBoard.button(10).onTrue( new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateDrive)
+                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorDrive)));
+                //home
+                buttonBoard.button(2).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateHome)
+                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorHome)));
+                //pickup
+                buttonBoard.button(9).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotatePickup)
+                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorPickup)));
+                //shoot
+                buttonBoard.button(3).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateShoot)
+                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorShoot)));
+
+                          //shoot
+                buttonBoard.button(6).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgaeStacked)
+                .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgaeStacked)));
+
+                buttonBoard.button(1).onTrue(new DoTheClimb(climber));
+
+            
+
+        }
 
         /**
          * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -158,47 +223,6 @@ public class RobotContainer {
         public Command getAutonomousCommand() {
 
                 return auto.getSelected();
-                //return new RunCommand(() -> robotDrive.drive(0, 0, 0, false, false), robotDrive);
-                // // Create config for trajectory
-                // TrajectoryConfig config = new TrajectoryConfig(
-                // AutoConstants.kMaxSpeedMetersPerSecond,
-                // AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                // // Add kinematics to ensure max speed is actually obeyed
-                // .setKinematics(DriveConstants.kDriveKinematics);
 
-                // // An example trajectory to follow. All units in meters.
-                // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                // // Start at the origin facing the +X direction
-                // new Pose2d(0, 0, new Rotation2d(0)),
-                // // Pass through these two interior waypoints, making an 's' curve path
-                // List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-                // // End 3 meters straight ahead of where we started, facing forward
-                // new Pose2d(3, 0, new Rotation2d(0)),
-                // config);
-
-                // var thetaController = new ProfiledPIDController(
-                // AutoConstants.kPThetaController, 0, 0,
-                // AutoConstants.kThetaControllerConstraints);
-                // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-                // SwerveControllerCommand swerveControllerCommand = new
-                // SwerveControllerCommand(
-                // exampleTrajectory,
-                // robotDrive::getPose, // Functional interface to feed supplier
-                // DriveConstants.kDriveKinematics,
-
-                // // Position controllers
-                // new PIDController(AutoConstants.kPXController, 0, 0),
-                // new PIDController(AutoConstants.kPYController, 0, 0),
-                // thetaController,
-                // robotDrive::setModuleStates,
-                // robotDrive);
-
-                // // Reset odometry to the starting pose of the trajectory.
-                // robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-                // // Run path following command, then stop at the end.
-                // return swerveControllerCommand.andThen(() -> robotDrive.drive(0, 0, 0,
-                // false, false));
         }
 }

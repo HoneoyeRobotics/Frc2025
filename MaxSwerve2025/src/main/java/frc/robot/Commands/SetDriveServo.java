@@ -11,12 +11,12 @@ import frc.robot.subsystems.VisionSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class UpServo extends InstantCommand {
+public class SetDriveServo extends InstantCommand {
   private VisionSubsystem m_vision;
-  public UpServo(VisionSubsystem vision) {
+  private double position;
+  public SetDriveServo(VisionSubsystem vision, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
-    SmartDashboard.putNumber("Up Servo", 0);
-    
+    this.position = position;
     m_vision = vision;
   }
 
@@ -24,7 +24,7 @@ public class UpServo extends InstantCommand {
   @Override
   public void initialize() {
 
-    m_vision.UpServo(SmartDashboard.getNumber("Up Servo", 0));
+    m_vision.setDriveServo(position);
 
 
   }
