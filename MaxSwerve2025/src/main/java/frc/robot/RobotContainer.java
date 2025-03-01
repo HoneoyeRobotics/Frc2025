@@ -55,13 +55,15 @@ public class RobotContainer {
         }
 
         public RobotContainer() {
-                UsbCamera camera = CameraServer.startAutomaticCapture();
-                // camera.setResolution(640, 360   );
-                //   camera.setVideoMode(PixelFormat.kMJPEG, 640, 360, 15);
+                UsbCamera camera = CameraServer.startAutomaticCapture(0);
+                // camera.setResolution(640, 360 );
+                // camera.setVideoMode(PixelFormat.kMJPEG, 640, 360, 15);
 
-                //   camera.setExposureManual(10);
-                //   camera.setWhiteBalanceManual(50);
+                // camera.setExposureManual(10);
+                // camera.setWhiteBalanceManual(50);
                 // Configure the button bindings`
+
+                UsbCamera camera2 = CameraServer.startAutomaticCapture(1);
                 configureButtonBindings();
 
                 // Configure default commands
@@ -88,41 +90,41 @@ public class RobotContainer {
                                                 ),
                                                 robotDrive));
 
-                SmartDashboard.putData("Toggle Claw PID", new ToggleClawRotatePID(ClawevatorSubsystem));
+                SmartDashboard.putData("Auto Test", new AutoCoral2Algae2(robotDrive, ClawevatorSubsystem, vision));
+
+                // SmartDashboard.putData("Toggle Claw PID", new ToggleClawRotatePID(ClawevatorSubsystem));
                 SmartDashboard.putData("Rotate Claw Up", new RotateClaw(ClawevatorSubsystem, 1));
                 SmartDashboard.putData("Rotate Claw Down", new RotateClaw(ClawevatorSubsystem, -1));
 
-                SmartDashboard.putData("Toggle Elevator PID", new TogglePID(ClawevatorSubsystem));
+                // SmartDashboard.putData("Toggle Elevator PID", new TogglePID(ClawevatorSubsystem));
                 SmartDashboard.putData("Move Elevator Up", new UpdateElevatorPID(ClawevatorSubsystem, 1));
                 SmartDashboard.putData("Move Elevator Down", new UpdateElevatorPID(ClawevatorSubsystem, -1));
-                SmartDashboard.putData("Set Elevator PID", new SetElevatorPID(ClawevatorSubsystem, 9999));
-                SmartDashboard.putNumber("Set Elevator  Setpoint", 0);
+                // SmartDashboard.putData("Set Elevator PID", new SetElevatorPID(ClawevatorSubsystem, 9999));
+                // SmartDashboard.putNumber("Set Elevator  Setpoint", 0);
 
-                SmartDashboard.putData("Claw Pickup",
-                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotatePickup));
-                SmartDashboard.putData("Claw Drive ",
-                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateDrive));
-                SmartDashboard.putData("Claw Shoot",
-                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateShoot));
-                SmartDashboard.putData("Claw Home", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateHome));
-                SmartDashboard.putData("Claw Algae 1",
-                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae1));
-                SmartDashboard.putData("Claw Algae 2",
-                                new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae2));
+                // SmartDashboard.putData("Claw Pickup",
+                //                 new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotatePickup));
+                // SmartDashboard.putData("Claw Drive ",
+                //                 new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateDrive));
+                // SmartDashboard.putData("Claw Shoot",
+                //                 new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateShoot));
+                // SmartDashboard.putData("Claw Home", new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateHome));
+                // SmartDashboard.putData("Claw Algae 1",
+                //                 new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae1));
+                // SmartDashboard.putData("Claw Algae 2",
+                //                 new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae2));
 
-                SmartDashboard.putData("Move Elevator Home",
-                                new SetElevatorPID(ClawevatorSubsystem, RobotConstants.ClawElevatorHome));
-                SmartDashboard.putData("Move Elevator Top",
-                                new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorShoot));
-                SmartDashboard.putData("Move Elevator Algae 1",
-                                new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae1));
-                SmartDashboard.putData("Move Elevator Algae 2",
-                                new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae2));
+                // SmartDashboard.putData("Move Elevator Home",
+                //                 new SetElevatorPID(ClawevatorSubsystem, RobotConstants.ClawElevatorHome));
+                // SmartDashboard.putData("Move Elevator Top",
+                //                 new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorShoot));
+                // SmartDashboard.putData("Move Elevator Algae 1",
+                //                 new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae1));
+                // SmartDashboard.putData("Move Elevator Algae 2",
+                //                 new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae2));
 
-                SmartDashboard.putData("moveServo", new MoveServo(vision));
-                SmartDashboard.putData("ServoUp", new MoveDriveServo(vision, -0.01));
+                // SmartDashboard.putData("ServoUp", new MoveDriveServo(vision, -0.01));
 
-                SmartDashboard.putData("ServoDown", new MoveDriveServo(vision, 0.01));
                 SmartDashboard.putData("ServoStraight", new SetDriveServo(vision, RobotConstants.DriveServoStraight));
 
                 SmartDashboard.putData("ServoBottom", new SetDriveServo(vision, RobotConstants.DriveServoBottom));
@@ -161,9 +163,19 @@ public class RobotContainer {
                                                 () -> robotDrive.setX(),
                                                 robotDrive));
                 driverController.back().onTrue(new ResetGyro(robotDrive));
-                driverController.povLeft().whileTrue(new CenterOnAprilTag(robotDrive, vision, true)
-                                .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
+                // driverController.povLeft().whileTrue(new CenterOnAprilTag(robotDrive, vision, true)
+                //                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
                 driverController.povRight().whileTrue(new CenterOnAprilTag(robotDrive, vision, false)
+                                .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
+
+
+                driverController.povUp().whileTrue(new ForwardToAprilTag(robotDrive, vision, false, true, 0, 2.8)
+                                .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
+
+
+                driverController.povLeft().whileTrue(new ForwardToAprilTag(robotDrive, vision, true, false, 4, -8.5)
+                                .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
+                driverController.povDown().whileTrue(new ForwardToAprilTag(robotDrive, vision, true, false, -14, -9)
                                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
 
                 // driverController.axisGreaterThan(5, 0)
@@ -177,41 +189,53 @@ public class RobotContainer {
                 driverController.y().whileTrue(new RunClaw(ClawevatorSubsystem, () -> -0.25));
                 driverController.a().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.5));
                 driverController.b().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.05));
-                driverController.start().whileTrue(new DoTheClimb(climber));
+                // driverController.start().whileTrue(new DoTheClimb(climber));
 
-
-                //coral level 3
+                // coral level 3
                 buttonBoard.button(4).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateCoral3)
-                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorCoral3)));
-                //coral level 2
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorCoral3)));
+                // coral level 2
                 buttonBoard.button(5).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateCoral2)
-                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawRotateCoral2)));
-                //algae level 1
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorCoral2)));
+                // algae level 1
                 buttonBoard.button(8).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae1)
-                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae1)));
-                //algae level 2
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorAlgae1)));
+                // algae level 2
                 buttonBoard.button(7).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae2)
-                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae2)));
-                //drive
-                buttonBoard.button(10).onTrue( new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateDrive)
-                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorDrive)));
-                //home
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorAlgae2)));
+                // drive
+                buttonBoard.button(10).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateDrive)
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorDrive)));
+                // home
                 buttonBoard.button(2).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateHome)
-                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorHome)));
-                //pickup
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorHome)));
+                // pickup
                 buttonBoard.button(9).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotatePickup)
-                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorPickup)));
-                //shoot
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorPickup)));
+                // shoot
                 buttonBoard.button(3).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateShoot)
-                        .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorShoot)));
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorShoot)));
 
-                          //shoot
+                // stacked
                 buttonBoard.button(6).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgaeStacked)
-                .andThen(new SetElevatorPID(ClawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgaeStacked)));
+                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                Constants.RobotConstants.ClawElevatorAlgaeStacked)));
 
-                buttonBoard.button(1).onTrue(new DoTheClimb(climber));
+                buttonBoard.button(1).whileTrue(new DoTheClimb(climber));
 
-            
+                // feed
+                buttonBoard.axisLessThan(1, 0)
+                                .onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateCoralFeed)
+                                                .andThen(new SetElevatorPID(ClawevatorSubsystem,
+                                                                Constants.RobotConstants.ClawElevatorCoralFeed)));
 
         }
 

@@ -3,40 +3,41 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.Commands;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.DriveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class DoTheClimb extends Command {
-  /** Creates a new DoTheClimb. */
-  private Climber climber;
-  public DoTheClimb(Climber climber) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.climber = climber;
-    addRequirements(climber);
-    
-    SmartDashboard.putNumber("ClimbSpeed", 0.2);
-  }
+public class DriveRobot extends Command {
+  private final DriveSubsystem driveSubsystem;
+  private final double xSpeed;
+  private final double ySpeed;
+  private final double zRotation;
 
+  /** Creates a new CenterOnAprilTag. */
+  public DriveRobot(DriveSubsystem driveSubsystem, double xSpeed, double ySpeed, double zRotation) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.driveSubsystem = driveSubsystem;
+    this.xSpeed = xSpeed;
+    this.ySpeed = ySpeed;
+    this.zRotation = zRotation;
+    addRequirements(driveSubsystem);
+  }
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {    
+  public void initialize() {
+   
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.Move(0.35);
-
+    driveSubsystem.drive(xSpeed, ySpeed, zRotation, false, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-climber.Move(0);
-
+    driveSubsystem.drive(0, 0, 0, false, false);
   }
 
   // Returns true when the command should end.

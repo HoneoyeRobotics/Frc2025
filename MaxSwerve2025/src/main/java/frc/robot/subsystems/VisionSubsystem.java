@@ -37,6 +37,7 @@ public class VisionSubsystem extends SubsystemBase {
   NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry ty = table.getEntry("ty");
   NetworkTableEntry ta = table.getEntry("ta");
+  NetworkTableEntry targetpose_cameraspace = table.getEntry("targetpose_cameraspace");
 
   public void moveServo(double Degree) {
     servo.setPosition(Degree);
@@ -45,13 +46,13 @@ public class VisionSubsystem extends SubsystemBase {
   public void moveDriveServo(double Setpoint) {
     servoSetpoint += Setpoint;
     DriveServo.setPosition(servoSetpoint);
-    SmartDashboard.putNumber("Drive Servo", servoSetpoint);
+    // SmartDashboard.putNumber("Drive Servo", servoSetpoint);
   }
 
   public void setDriveServo(double Setpoint) {
     DriveServo.setPosition(Setpoint);
     servoSetpoint = Setpoint;
-    SmartDashboard.putNumber("Drive Servo", Setpoint);
+    // SmartDashboard.putNumber("Drive Servo", Setpoint);
   }
 
   Timer servoTimer;
@@ -64,14 +65,16 @@ public class VisionSubsystem extends SubsystemBase {
     double y = ty.getDouble(0.0);
     double area = ta.getDouble(0.0);
 
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
+    // SmartDashboard.putNumber("LimelightX", x);
+    // SmartDashboard.putNumber("LimelightY", y);
+    // SmartDashboard.putNumber("LimelightArea", area);
 
     SmartDashboard.putBoolean("canSeeTag", canSeeTag());
     SmartDashboard.putBoolean("onTarget", getOnTarget());
 
-    SmartDashboard.putNumber("Current Angle", servo.getAngle());
+    SmartDashboard.putNumber("rot", getRotation());
+
+    // SmartDashboard.putNumber("Current Angle", servo.getAngle());
 
     // can you find a tag?
 
@@ -111,11 +114,25 @@ public class VisionSubsystem extends SubsystemBase {
   public double getX() {
     return tx.getDouble(0.0);
   }
+  public double getY() {
+    return ty.getDouble(0.0);
+  }
 
   public boolean canSeeTag() {
 
     double area = ta.getDouble(0.0);
     return area > 0;
+    
+  }
+
+  public double getRotation(){
+
+    var pose = new double[6];
+    pose = targetpose_cameraspace.getDoubleArray(new double[] {0,0,0,0,0,0});
+
+    SmartDashboard.putNumber("RotToApril", pose[5]);
+    return pose[5];
+
   }
 
   public boolean getOnTarget() {

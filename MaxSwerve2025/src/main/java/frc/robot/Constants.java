@@ -103,25 +103,30 @@ public final class Constants {
     public static final double ClawRotateHome = 0.7;
     public static final double ClawRotatePickup = 0.46;
     public static final double ClawRotateDrive = 0.58;
-    public static final double ClawRotateShoot = 0.65;
-    public static final double ClawRotateAlgaeStacked = 0.05;
-    public static final double ClawRotateAlgae1 = 0.53;
-    public static final double ClawRotateAlgae2 = 0.55;
-    public static final double ClawRotateCoral3 = 0.53;
-    public static final double ClawRotateCoral2 = 0.55;
+    // public static final double ClawRotateShoot = 0.65;
+    
+    public static final double ClawRotateShoot = 0.62;
+    public static final double ClawRotateAlgaeStacked = 0.5;
+    public static final double ClawRotateAlgae1 = 0.48;
+    public static final double ClawRotateAlgae2 = 0.48;
+    public static final double ClawRotateCoral3 = 0.44;
+    public static final double ClawRotateCoral2 = 0.44;
+    public static final double ClawRotateCoralFeed = 0.55;
 
     public static final double ClawElevatorHome = 0;
     public static final double ClawElevatorPickup = 0;
     public static final double ClawElevatorDrive = 0;
-    public static final double ClawElevatorShoot = 100;
+    public static final double ClawElevatorShoot = 101.5;
     public static final double ClawElevatorAlgaeStacked = 11;
-    public static final double ClawElevatorAlgae1 = 26;
-    public static final double ClawElevatorAlgae2  = 55;
-    public static final double ClawElevatorCoral3= 26;
-    public static final double ClawElevatorCoral2  = 55;
+    public static final double ClawElevatorAlgae1 = 45;
+    public static final double ClawElevatorAlgae2  = 73;
+    public static final double ClawElevatorCoral3= 56.5;
+    public static final double ClawElevatorCoral2  = 25.5;
+    public static final double ClawElevatorCoralFeed  = 4.5;
 
-    public static final double DriveServoStraight = 0.6;
-    public static final double DriveServoBottom = 0.75;
+    public static final double DriveServoStraight = 0.3;
+    public static final double DriveServoTop = 0.75;
+    public static final double DriveServoBottom = 0.3;
 
     // public static final double[] ClawPositions = new double[]{
     // ClawRotatePickup,

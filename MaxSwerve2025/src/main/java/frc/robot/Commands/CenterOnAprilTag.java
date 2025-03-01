@@ -5,6 +5,7 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -31,6 +32,11 @@ public class CenterOnAprilTag extends Command {
   @Override
   public void initialize() {
     pid = new PIDController(0.1, 0.001, 0);
+    pid.setSetpoint(0);
+    pid.setP(Preferences.getDouble("turnp", 0.1));
+    pid.setI(Preferences.getDouble("turni", 0.0));
+    pid.setD(Preferences.getDouble("turnd", 0.0));
+
     visionSubsystem.setDriveServo(RobotConstants.DriveServoBottom);
   }
 

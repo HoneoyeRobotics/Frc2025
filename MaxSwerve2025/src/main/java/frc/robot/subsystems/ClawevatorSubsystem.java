@@ -37,7 +37,7 @@ public class ClawevatorSubsystem extends SubsystemBase {
 
   public boolean algae = false;
 
-  private PIDController rotatePidController = new PIDController(0.5, 0, 0);
+  private PIDController rotatePidController = new PIDController(2, 0, 0);
   private PIDController clawHoldPidController = new PIDController(0.2, 0, 0);
   private boolean EnableClawHoldPID = false;
   private boolean EnableRotatePID = false;
@@ -51,6 +51,7 @@ public class ClawevatorSubsystem extends SubsystemBase {
     upperClawMotor.setInverted(true);
 
     rotatePidController.setSetpoint(RotatePIDSetpoint);
+    rotatePidController.setTolerance(0.01);
 
     leftElevator = new SparkMax(CanIDs.leftElevator, MotorType.kBrushless);
     rightElevator = new SparkMax(CanIDs.rightElevator, MotorType.kBrushless);
@@ -168,6 +169,8 @@ public class ClawevatorSubsystem extends SubsystemBase {
     double RotateSpeed = 0;
     double clawPosition = rotateMotor.getAbsoluteEncoder().getPosition();
 
+    
+
 
     if (EnableRotatePID == true) {
       RotateSpeed = rotatePidController.calculate(clawPosition) * 1;
@@ -200,14 +203,14 @@ public class ClawevatorSubsystem extends SubsystemBase {
       // //if close to home, cut power. Not needed with slower speed
       // if(ElevatorSetpoint == 0 && position > -2)
       //     speed = 0;
-
+      double maxSpeed = 0.7;
           //if moving down
-      if(ElevatorSetpoint > elevatorPosition && speed > 0.33)
-          speed = 0.33;
+      if(ElevatorSetpoint > elevatorPosition && speed > maxSpeed)
+          speed = maxSpeed;
 
       //if moving up 
-      if(ElevatorSetpoint < elevatorPosition && speed < -0.33)
-          speed = -0.33;
+      if(ElevatorSetpoint < elevatorPosition && speed < -maxSpeed)
+          speed = -maxSpeed;
       // claw must be in the outer position for the elevator to move up or down aside from being in the "final" position
 
 
@@ -217,18 +220,18 @@ public class ClawevatorSubsystem extends SubsystemBase {
 
     //dashboard reporting
     
-    SmartDashboard.putBoolean("Rotate PID", EnableRotatePID);
+    // SmartDashboard.putBoolean("Rotate PID", EnableRotatePID);
     SmartDashboard.putNumber("Claw Position",clawPosition );
     SmartDashboard.putNumber("Claw Setpoint", rotatePidController.getSetpoint());
-    SmartDashboard.putBoolean("Algae", algaeCheck());
-    SmartDashboard.putNumber("Algae Value", algaeSensor.getValue());
-    SmartDashboard.putNumber("Falcon Position", upperClawMotor.getPosition().getValueAsDouble());
+    // SmartDashboard.putBoolean("Algae", algaeCheck());
+    // SmartDashboard.putNumber("Algae Value", algaeSensor.getValue());
+    // SmartDashboard.putNumber("Falcon Position", upperClawMotor.getPosition().getValueAsDouble());
 
-    SmartDashboard.putNumber("LeftEleAmp", leftElevator.getOutputCurrent());
-    SmartDashboard.putNumber("RightEleAmp", rightElevator.getOutputCurrent());
+    // SmartDashboard.putNumber("LeftEleAmp", leftElevator.getOutputCurrent());
+    // SmartDashboard.putNumber("RightEleAmp", rightElevator.getOutputCurrent());
     SmartDashboard.putNumber("ElevatorSetpoint", elevatorPIDContorller.getSetpoint());
 
-    SmartDashboard.putBoolean("Elevator at Bottom", elevatorAtBottom());
+    // SmartDashboard.putBoolean("Elevator at Bottom", elevatorAtBottom());
 
     SmartDashboard.putNumber("ElevatorPosition", leftElevator.getEncoder().getPosition());
 
