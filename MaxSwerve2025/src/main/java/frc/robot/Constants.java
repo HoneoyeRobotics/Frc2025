@@ -105,7 +105,7 @@ public final class Constants {
     public static final double ClawRotateDrive = 0.58;
     // public static final double ClawRotateShoot = 0.65;
     
-    public static final double ClawRotateShoot = 0.62;
+    public static final double ClawRotateShoot = 0.65;
     public static final double ClawRotateAlgaeStacked = 0.5;
     public static final double ClawRotateAlgae1 = 0.48;
     public static final double ClawRotateAlgae2 = 0.48;
@@ -124,9 +124,9 @@ public final class Constants {
     public static final double ClawElevatorCoral2  = 25.5;
     public static final double ClawElevatorCoralFeed  = 4.5;
 
-    public static final double DriveServoStraight = 0.3;
-    public static final double DriveServoTop = 0.75;
-    public static final double DriveServoBottom = 0.3;
+    public static final double DriveServoStraight = 0.5;
+    public static final double DriveServoTop = 0.5;
+    public static final double DriveServoBottom = 0.5;
 
     // public static final double[] ClawPositions = new double[]{
     // ClawRotatePickup,

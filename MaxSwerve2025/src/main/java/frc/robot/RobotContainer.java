@@ -70,25 +70,7 @@ public class RobotContainer {
                 robotDrive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new RunCommand(
-                                                () -> robotDrive.drive(
-                                                                -MathUtil.applyDeadband(driverController.getLeftY(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(driverController.getLeftX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                // -MathUtil.applyDeadband(driverController.getRightX(),
-                                                                // OIConstants.kDriveDeadband)
-                                                                -MathUtil.applyDeadband(driverController
-                                                                                .getRightTriggerAxis()
-                                                                                - driverController
-
-                                                                                                .getLeftTriggerAxis(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                true,
-                                                                driverController.leftBumper().getAsBoolean()
-
-                                                ),
-                                                robotDrive));
+                                new TeleopDrive(robotDrive, driverController));
 
                 SmartDashboard.putData("Auto Test", new AutoCoral2Algae2(robotDrive, ClawevatorSubsystem, vision));
 
@@ -175,7 +157,7 @@ public class RobotContainer {
 
                 driverController.povLeft().whileTrue(new ForwardToAprilTag(robotDrive, vision, true, false, 4, -8.5)
                                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
-                driverController.povDown().whileTrue(new ForwardToAprilTag(robotDrive, vision, true, false, -14, -9)
+                driverController.povDown().whileTrue(new ForwardToAprilTag(robotDrive, vision, true, false, -8.5, -9.32)
                                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
 
                 // driverController.axisGreaterThan(5, 0)
