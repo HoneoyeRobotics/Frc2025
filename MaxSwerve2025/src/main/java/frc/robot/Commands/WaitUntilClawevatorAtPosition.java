@@ -8,15 +8,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClawevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunClawSet extends Command {
+public class WaitUntilClawevatorAtPosition extends Command {
   /** Creates a new RunClaw. */
   private final ClawevatorSubsystem clawSubsystem;
-  private final double setpoint;
 
-  public RunClawSet(ClawevatorSubsystem clawSubsystem, double setpoint) {
+  public WaitUntilClawevatorAtPosition(ClawevatorSubsystem clawSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.clawSubsystem = clawSubsystem;
-    this.setpoint= setpoint;
   }
 
   // Called when the command is initially scheduled.
@@ -26,21 +24,19 @@ public class RunClawSet extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawSubsystem.runClaw(setpoint, false);
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     
-    clawSubsystem.runClaw(0, true);
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    
+    return clawSubsystem.SystemAtSetpoint();
   }
 }

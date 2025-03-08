@@ -6,9 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.util.PixelFormat;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -107,14 +104,10 @@ public class RobotContainer {
 
                 // SmartDashboard.putData("ServoUp", new MoveDriveServo(vision, -0.01));
 
-                SmartDashboard.putData("ServoStraight", new SetDriveServo(vision, RobotConstants.DriveServoStraight));
+                // SmartDashboard.putData("ServoStraight", new SetDriveServo(vision, RobotConstants.DriveServoStraight));
 
-                SmartDashboard.putData("ServoBottom", new SetDriveServo(vision, RobotConstants.DriveServoBottom));
-                SmartDashboard.putData("Auto Mode", auto);
-                auto.addOption("Auto 1", new PathPlannerAuto("Auto 1"));
-                auto.addOption("Auto 2", new PathPlannerAuto("Auto 2"));
-                auto.addOption("Is gyro weird again", new PathPlannerAuto("Is gyro weird again"));
-
+                // SmartDashboard.putData("ServoBottom", new SetDriveServo(vision, RobotConstants.DriveServoBottom));
+              
                 NamedCommands.registerCommand("Claw Pick Up", new WaitCommand(0.1));
                 NamedCommands.registerCommand("Shoot", new WaitCommand(0.1));
                 NamedCommands.registerCommand("Arm L-1", new WaitCommand(0.1));
@@ -123,10 +116,22 @@ public class RobotContainer {
                 NamedCommands.registerCommand("Arm L-3", new WaitCommand(0.1));
                 NamedCommands.registerCommand("Arm Floor", new WaitCommand(0.1));
                 NamedCommands.registerCommand("Arm Shoot", new WaitCommand(0.1));
+                NamedCommands.registerCommand("AutoGetAlgae2", new AutoGetAlgae2(robotDrive, ClawevatorSubsystem, vision));
+                NamedCommands.registerCommand("AutoGetAlgae1", new AutoGetAlgae1(robotDrive, ClawevatorSubsystem, vision));
+
+
+                SmartDashboard.putData("Auto Mode", auto);
+                auto.addOption("Auto 1", new PathPlannerAuto("Auto 1"));
+                auto.addOption("Auto 2", new PathPlannerAuto("Auto 2"));
+                auto.addOption("Is gyro weird again", new PathPlannerAuto("Is gyro weird again"));
+                auto.addOption("GrabAlgae1", new PathPlannerAuto("GrabAlgae"));
+                auto.addOption("AutoGetAlgae1", new AutoGetAlgae1(robotDrive, ClawevatorSubsystem, vision));
+
 
                 ClawevatorSubsystem.ToggleClawRotatePID();
                 ClawevatorSubsystem.ToggleElevatorPID();
-
+                SmartDashboard.putData("ForwardUntilNoAprilTag", new ForwardUntilNoAprilTag(robotDrive, vision, 0.1));
+                SmartDashboard.putData("AutoGetAlgae", new AutoGetAlgae2(robotDrive, ClawevatorSubsystem, vision));
                 SmartDashboard.putData(climber);
         }
 
@@ -140,10 +145,7 @@ public class RobotContainer {
          * {@link JoystickButton}.
          */
         private void configureButtonBindings() {
-                driverController.rightBumper()
-                                .whileTrue(new RunCommand(
-                                                () -> robotDrive.setX(),
-                                                robotDrive));
+                driverController.start().whileTrue(new RunCommand(() -> robotDrive.setX(),robotDrive));
                 driverController.back().onTrue(new ResetGyro(robotDrive));
                 // driverController.povLeft().whileTrue(new CenterOnAprilTag(robotDrive, vision, true)
                 //                 .andThen(new RunCommand(() -> robotDrive.setX(), robotDrive).withTimeout(1)));
@@ -176,40 +178,40 @@ public class RobotContainer {
                 // coral level 3
                 buttonBoard.button(4).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateCoral3)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorCoral3)));
+                                                Constants.RobotConstants.ClawElevatorCoral3)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Coral3)));
                 // coral level 2
                 buttonBoard.button(5).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateCoral2)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorCoral2)));
+                                                Constants.RobotConstants.ClawElevatorCoral2)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Coral2)));
                 // algae level 1
                 buttonBoard.button(8).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae1)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorAlgae1)));
+                                                Constants.RobotConstants.ClawElevatorAlgae1)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Algae1)));
                 // algae level 2
                 buttonBoard.button(7).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgae2)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorAlgae2)));
+                                                Constants.RobotConstants.ClawElevatorAlgae2)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Algae2)));
                 // drive
                 buttonBoard.button(10).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateDrive)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorDrive)));
+                                                Constants.RobotConstants.ClawElevatorDrive)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Drive)));
                 // home
                 buttonBoard.button(2).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateHome)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorHome)));
+                                                Constants.RobotConstants.ClawElevatorHome)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Home)));
                 // pickup
                 buttonBoard.button(9).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotatePickup)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorPickup)));
+                                                Constants.RobotConstants.ClawElevatorPickup)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Pickup)));
                 // shoot
                 buttonBoard.button(3).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateShoot)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorShoot)));
+                                                Constants.RobotConstants.ClawElevatorShoot)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Shoot)));
 
                 // stacked
                 buttonBoard.button(6).onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateAlgaeStacked)
                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                Constants.RobotConstants.ClawElevatorAlgaeStacked)));
+                                                Constants.RobotConstants.ClawElevatorAlgaeStacked)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Stack)));
 
                 buttonBoard.button(1).whileTrue(new DoTheClimb(climber));
 
@@ -217,7 +219,7 @@ public class RobotContainer {
                 buttonBoard.axisLessThan(1, 0)
                                 .onTrue(new SetClawPID(ClawevatorSubsystem, RobotConstants.ClawRotateCoralFeed)
                                                 .andThen(new SetElevatorPID(ClawevatorSubsystem,
-                                                                Constants.RobotConstants.ClawElevatorCoralFeed)));
+                                                                Constants.RobotConstants.ClawElevatorCoralFeed)).andThen(new SetClawevatorPosition(ClawevatorSubsystem, ClawevatorPositions.Feeder)));
 
         }
 

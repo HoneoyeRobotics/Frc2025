@@ -5,26 +5,24 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ClawevatorPositions;
+import frc.robot.subsystems.ClawevatorSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class MoveDriveServo extends InstantCommand {
-  private VisionSubsystem m_vision;
-  private double position;
-  public MoveDriveServo(VisionSubsystem vision, double position) {
+public class SetClawevatorPosition extends InstantCommand {
+  private final ClawevatorSubsystem elevatorSubsystem;
+  private final ClawevatorPositions position;
+  public SetClawevatorPosition(ClawevatorSubsystem elevatorSubsystem, ClawevatorPositions Position) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.position = position;
-    m_vision = vision;
+    this.elevatorSubsystem = elevatorSubsystem;
+    this.position = Position;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    m_vision.moveDriveServo(position);
-
-
+    elevatorSubsystem.SetSetposition(position);
   }
 }

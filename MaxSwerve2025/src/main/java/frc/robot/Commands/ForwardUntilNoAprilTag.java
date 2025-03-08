@@ -5,42 +5,48 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ClawevatorSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunClawSet extends Command {
-  /** Creates a new RunClaw. */
-  private final ClawevatorSubsystem clawSubsystem;
-  private final double setpoint;
+public class ForwardUntilNoAprilTag extends Command {
+  private final DriveSubsystem driveSubsystem;
+  private final VisionSubsystem visionSubsystem;
+  private final double speed;
 
-  public RunClawSet(ClawevatorSubsystem clawSubsystem, double setpoint) {
+  /** Creates a new CenterOnAprilTag. */
+  public ForwardUntilNoAprilTag(DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.clawSubsystem = clawSubsystem;
-    this.setpoint= setpoint;
+    this.driveSubsystem = driveSubsystem;
+    this.visionSubsystem = visionSubsystem;
+    this.speed = speed;
+    
+    addRequirements(driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawSubsystem.runClaw(setpoint, false);
 
+    driveSubsystem.drive(speed, 0, 0, false, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    driveSubsystem.drive(0, 0, 0, false, false);
     
-    clawSubsystem.runClaw(0, true);
-
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    //return visionSubsystem.canSeeTag() && visionSubsystem.getOnTarget();
+    return visionSubsystem.canSeeTag() == false;
   }
 }

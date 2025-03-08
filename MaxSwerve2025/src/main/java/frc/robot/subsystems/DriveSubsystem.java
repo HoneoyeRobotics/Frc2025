@@ -134,7 +134,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Gyro Angle", getHeading());
+    SmartDashboard.putNumber("Gyro Angle", MathUtil.inputModulus(getHeading(), -180, 180));
     // Update the odometry in the periodic block
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()), // IMUAxis.kZ)),
