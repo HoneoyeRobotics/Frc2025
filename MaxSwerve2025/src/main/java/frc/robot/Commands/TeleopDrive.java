@@ -81,14 +81,15 @@ public class TeleopDrive extends Command {
         targetAngle = 180;
       else if (tag == 2)
         targetAngle = -90;
-      int heading = (int)driveSubsystem.getHeading();
+
+
+      double heading = MathUtil.inputModulus(driveSubsystem.getHeading(),-360,360);
       int remainder = (int)(Math.abs(heading) % targetAngle );
       int closest = (int)(heading - (heading % targetAngle));
       // if(heading < 0){
       //   closest *= -1;
       // }
-      System.out.println("heading: " + heading + "; remainder: " + remainder 
-      + "closest:" + closest);
+      System.out.println("heading: " + heading + "; remainder: " + remainder + "closest:" + closest);
       
       //we want to be 180, find where we are
 
@@ -96,13 +97,13 @@ public class TeleopDrive extends Command {
 
       //if the remainder is more than half of the current setpoint, then we want to go back rather than forward.
 
-      double rotatekP = .035;
-      double rotateVelocity = rotateDifference * strafekP; 
-      double rotatespeedModifier =  Math.abs(xSpeed);
-      if(rotatespeedModifier < 0.10 && rotatespeedModifier > -0.10)
-        rotatespeedModifier = 0.10 * (rotatespeedModifier < 0 ? -1 : 0);
+      // double rotatekP = .035;
+      // double rotateVelocity = rotateDifference * strafekP; 
+      // double rotatespeedModifier =  Math.abs(xSpeed);
+      // if(rotatespeedModifier < 0.10 && rotatespeedModifier > -0.10)
+      //   rotatespeedModifier = 0.10 * (rotatespeedModifier < 0 ? -1 : 0);
         
-      rotateVelocity *= rotatespeedModifier;
+      // rotateVelocity *= rotatespeedModifier;
     }
 
     //normal driving;

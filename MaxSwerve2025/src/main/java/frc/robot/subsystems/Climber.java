@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDs;
 
@@ -17,6 +19,8 @@ public class Climber extends SubsystemBase {
 
   }
 
+  private DigitalInput leftDigitalInput = new DigitalInput(0);
+  private DigitalInput rightDigitalInput = new DigitalInput(1);
 
   private SparkMax backClimber = new SparkMax(CanIDs.backClimber, MotorType.kBrushless);
   private SparkMax frontClimber = new SparkMax(CanIDs.frontClimber, MotorType.kBrushless);
@@ -30,5 +34,7 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("LeftHook", leftDigitalInput.get());
+    SmartDashboard.putBoolean("RightHook", rightDigitalInput.get());
   }
 }
