@@ -166,6 +166,26 @@ public class ClawevatorSubsystem extends SubsystemBase {
     return elevatorPIDContorller.atSetpoint() && rotatePidController.atSetpoint();
   }
 
+  public boolean isCoral(){
+
+    switch (SetPosition) {
+
+      case Stack:
+      case Coral2:
+      case Coral3:
+      case Feeder:
+return true;
+
+      case Home:
+      case Algae1:
+      case Algae2:
+      case Shoot:
+      case Drive:
+      default:
+        return false;
+    }
+  }
+
   // overrides
   @Override
   public void periodic() {

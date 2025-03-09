@@ -26,7 +26,7 @@ public class AutoGetAlgae2 extends SequentialCommandGroup {
         new SetElevatorPID(clawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae2),
         new WaitUntilClawevatorAtPosition(clawevatorSubsystem).withTimeout(2),
         new ParallelRaceGroup(new RunClaw(clawevatorSubsystem, () -> 0.5),
-            new ForwardUntilNoAprilTag(driveSubsystem, visionSubsystem, 0.25)),
+            new ForwardToAlgae(driveSubsystem, visionSubsystem, 0.25)),
         new DriveRobot(driveSubsystem, -0.5, 0, 0).withTimeout(1)
 
     );

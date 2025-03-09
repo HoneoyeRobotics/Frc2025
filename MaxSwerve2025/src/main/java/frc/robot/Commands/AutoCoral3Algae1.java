@@ -13,16 +13,16 @@ import frc.robot.subsystems.*;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoCoral2Algae2 extends SequentialCommandGroup {
+public class AutoCoral3Algae1 extends SequentialCommandGroup {
   /** Creates a new AutoGooooooood. */
-  public AutoCoral2Algae2(DriveSubsystem driveSubsystem, ClawevatorSubsystem clawevatorSubsystem,
+  public AutoCoral3Algae1(DriveSubsystem driveSubsystem, ClawevatorSubsystem clawevatorSubsystem,
       VisionSubsystem visionSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoScoreCoral2(driveSubsystem, clawevatorSubsystem, visionSubsystem)
+    addCommands(new AutoScoreCoral3(driveSubsystem, clawevatorSubsystem, visionSubsystem)
 
         ,
 
-        new AutoGetAlgae2(driveSubsystem, clawevatorSubsystem, visionSubsystem));
+        new AutoGetAlgae1(driveSubsystem, clawevatorSubsystem, visionSubsystem));
   }
 }

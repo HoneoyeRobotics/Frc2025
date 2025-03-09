@@ -101,17 +101,17 @@ public final class Constants {
 
   public static final class RobotConstants {
     public static final double ClawRotateHome = 0.69;
-    public static final double ClawRotatePickup = 0.46;
+    public static final double ClawRotatePickup = 0.44;
     public static final double ClawRotateDrive = 0.58;
     // public static final double ClawRotateShoot = 0.65;
     
     public static final double ClawRotateShoot = 0.6;
-    public static final double ClawRotateAlgaeStacked = 0.5;
+    public static final double ClawRotateAlgaeStacked = 0.46;
     public static final double ClawRotateAlgae1 = 0.46;
     public static final double ClawRotateAlgae2 = 0.46;
     public static final double ClawRotateCoral3 = 0.445;
     public static final double ClawRotateCoral2 = 0.445;
-    public static final double ClawRotateCoralFeed = 0.55;
+    public static final double ClawRotateCoralFeed = 0.54;
 
     public static final double ClawElevatorHome = 0;
     public static final double ClawElevatorPickup = 0;
@@ -125,7 +125,7 @@ public final class Constants {
     public static final double ClawElevatorCoral3= 56.5;
     public static final double ClawElevatorCoral2  = 27.5;
 
-    public static final double ClawElevatorCoralFeed  = 4.5;
+    public static final double ClawElevatorCoralFeed  = 10.5;
 
     public static final double DriveServoStraight = 0.5;
     public static final double DriveServoTop = 0.5;

@@ -6,6 +6,7 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.*;
@@ -13,21 +14,20 @@ import frc.robot.subsystems.*;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoGetAlgae1 extends SequentialCommandGroup {
+public class AutoScoreCoral3 extends SequentialCommandGroup {
   /** Creates a new AutoGooooooood. */
-  public AutoGetAlgae1(DriveSubsystem driveSubsystem, ClawevatorSubsystem clawevatorSubsystem,
+  public AutoScoreCoral3(DriveSubsystem driveSubsystem, ClawevatorSubsystem clawevatorSubsystem,
       VisionSubsystem visionSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new SetClawevatorPosition(clawevatorSubsystem, ClawevatorPositions.Algae1),
-        new SetClawPID(clawevatorSubsystem, RobotConstants.ClawRotateAlgae1),
-        new SetElevatorPID(clawevatorSubsystem, Constants.RobotConstants.ClawElevatorAlgae1),
-        new WaitUntilClawevatorAtPosition(clawevatorSubsystem).withTimeout(2),
-        new ParallelRaceGroup(new RunClaw(clawevatorSubsystem, () -> 0.5),
-          new ForwardToAlgae(driveSubsystem, visionSubsystem, 0.25)        
-        ),
-        new DriveRobot(driveSubsystem, -0.5,0,0).withTimeout(1)
+        new SetClawevatorPosition(clawevatorSubsystem, ClawevatorPositions.Coral3),
+        new SetClawPID(clawevatorSubsystem, RobotConstants.ClawRotateCoral3),
+        new SetElevatorPID(clawevatorSubsystem, Constants.RobotConstants.ClawElevatorCoral3),
+        new WaitUntilClawevatorAtPosition(clawevatorSubsystem).withTimeout(2),        
+        new ForwardToLeftCoral(driveSubsystem, visionSubsystem, 0.25),
+        new RunClaw(clawevatorSubsystem, () -> 0.1).withTimeout(2),
+        new DriveRobot(driveSubsystem, -0.5, 0, 0).withTimeout(1)
 
     );
 

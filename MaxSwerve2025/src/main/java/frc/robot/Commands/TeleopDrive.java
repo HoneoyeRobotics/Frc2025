@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LimelightHelpers;
+import frc.robot.subsystems.ClawevatorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -20,13 +21,16 @@ public class TeleopDrive extends Command {
 
   private final CommandXboxController driverController;
   private final VisionSubsystem visionSubsystem;
+  private final ClawevatorSubsystem clawevatorSubsystem;
 
   /** Creates a new CenterOnAprilTag. */
-  public TeleopDrive(DriveSubsystem driveSubsystem, CommandXboxController driverController, VisionSubsystem visionSubsystem) {
+  public TeleopDrive(DriveSubsystem driveSubsystem, CommandXboxController driverController,
+      VisionSubsystem visionSubsystem, ClawevatorSubsystem clawevatorSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveSubsystem = driveSubsystem;
     this.visionSubsystem = visionSubsystem;
     this.driverController = driverController;
+    this.clawevatorSubsystem = clawevatorSubsystem;
     addRequirements(driveSubsystem);
   }
 
@@ -61,94 +65,44 @@ public class TeleopDrive extends Command {
     }
 
     // if you are pushing on the left stick, modify based ont he limelight.
-    if (driverController.rightBumper().getAsBoolean() == true) {
+    if (driverController.leftBumper().getAsBoolean() == true) {
 
+      fieldRelative = false;
+      xSpeed = RightxSpeed;
+      ySpeed = RightySpeed;
       // can you see an april tag??
 
       double tag = LimelightHelpers.getFiducialID("limelight-drive");
 
       if (tag > 0) {
 
-        // strafe
-        // double strafekP = .03;
-        double xoffset = -15;        
+        // calculate side to side difference.
         double currentTX = LimelightHelpers.getTX("limelight-drive");
+        double xoffset = 0;
 
-        xoffset  = (-0.911955 * visionSubsystem.getA()) - 4.56205;
-
-        double diffTXtoTarget = currentTX - xoffset;// ex at 23, needs to be at -15, so should be 38
-
-        
+        if (clawevatorSubsystem.isCoral())
+          xoffset = 0.539404 * visionSubsystem.getA() + 0.832159; // coral
+        else
+          xoffset = (-0.911955 * visionSubsystem.getA()) - 4.56205; // algae
         yPidController.setSetpoint(xoffset);
-        double strafePower = yPidController.calculate(currentTX) * -1;
-
-        // double strafeVelocity = (diffTXtoTarget) * strafekP; // if 39, should be
-        // 0.475 (47.5%)
-        // System.out.println("tx plus offset " +(currentTX - xoffset) +"; SKP: " +
-        // strafekP );
-        // double speedModifier = Math.abs(xSpeed);
-        // //if we are going fast, we need to speed up the number.
-        // if(speedModifier > 0.10 || speedModifier < -0.10)
-        // {
-        // //example, we want to adjust by 0.25; but we are going fast and want to go
-        // faster to the
-
-        // speedModifier = speedModifier * 2;
-
-        // }
-        // if(speedModifier != 0 )
-        // strafeVelocity *= speedModifier;
-
-        // invert since tx is positive when the target is to the right of the crosshair
-
-        // if we are going towards us (negative speed based on field relative) then we
-        // want to use the power and they send
+        double strafePower = yPidController.calculate(currentTX) ;//* (clawevatorSubsystem.isCoral() ? 1 :-1);
         ySpeed = strafePower * (1 + Math.abs(ySpeed));
 
-        // System.out.println("strafePower: "+strafePower+"; ySpeed: " + ySpeed + ";
-        // diffTXtoTarget: " + diffTXtoTarget + "; currentTX:" + currentTX);
-
-        // zRot = rot_limelight;
-
-        // double forward_limelight = limelight_range_proportional();
-        // xSpeed = forward_limelight;
-        double targetAngle = 0;
-        if (tag == 6)
-          targetAngle = 180;
-        else if (tag == 2)
-          targetAngle = -90;
-
+        // now check for how off rotationally we are
         double heading = MathUtil.inputModulus(driveSubsystem.getHeading(), -360, 360);
-        double targetRotation = targetAngle;
-        if (heading < 0) {
-          targetRotation = targetRotation - 360;
-        }
 
-        double degreesOff = 0;
-        degreesOff = targetRotation - heading;
-
-
-
-         degreesOff = visionSubsystem.getRotation();
-        // if(heading < 0){
-        // closest *= -1;
-        // }
-        // System.out.println("heading: " + heading + "; Target: " + targetRotation + ";
-        // off: " + degreesOff);
-
-        // we want to be 180, find where we are
-
-        // if the remainder is more than half of the current setpoint, then we want to
-        // go back rather than forward.
-
+        double degreesOff = visionSubsystem.getRotation();
         double rotatekP = .035;
         double rotateVelocity = degreesOff * rotatekP;
         double rotatespeedModifier = Math.abs(xSpeed);
         if (rotatespeedModifier < 0.10 && rotatespeedModifier > -0.10)
           rotatespeedModifier = 0.10 * (rotatespeedModifier < 0 ? -1 : 0);
-
-        rotateVelocity *= rotatespeedModifier;
+        rotateVelocity *= rotatespeedModifier * -1;
         zRot += rotateVelocity;
+
+        // are we too close and going towards it
+        if (visionSubsystem.getA() > 17 && xSpeed < 0)
+          xSpeed = 0;
       }
     }
 
@@ -158,7 +112,7 @@ public class TeleopDrive extends Command {
         ySpeed,
         zRot,
         fieldRelative,
-        driverController.leftBumper().getAsBoolean()
+        driverController.rightBumper().getAsBoolean()
 
     );
   }
