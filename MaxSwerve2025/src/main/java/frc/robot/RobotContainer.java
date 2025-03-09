@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,27 +48,29 @@ public class RobotContainer {
          */
 
         public void teleopInit() {
+        
                 // vision.moveServo(133);
                 // vision.moveServo(0);
         }
 
         public RobotContainer() {
-                UsbCamera camera = CameraServer.startAutomaticCapture(0);
-                // camera.setResolution(640, 360 );
-                // camera.setVideoMode(PixelFormat.kMJPEG, 640, 360, 15);
-
+                // UsbCamera camera = new UsbCamera("Climb", 1);
+                // camera.setVideoMode(PixelFormat.kMJPEG, 640, 480, 15);
+                // CameraServer.startAutomaticCapture(camera);
                 // camera.setExposureManual(10);
                 // camera.setWhiteBalanceManual(50);
                 // Configure the button bindings`
 
-                UsbCamera camera2 = CameraServer.startAutomaticCapture(1);
+                 UsbCamera camera2 = CameraServer.startAutomaticCapture(0);
+                // camera2.setResolution(640, 480 );
+                // camera2.setVideoMode(PixelFormat.kMJPEG, 640, 480, 15);
                 configureButtonBindings();
 
                 // Configure default commands
                 robotDrive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new TeleopDrive(robotDrive, driverController));
+                                new TeleopDrive(robotDrive, driverController, vision));
 
                 SmartDashboard.putData("Auto Test", new AutoCoral2Algae2(robotDrive, ClawevatorSubsystem, vision));
 
@@ -131,7 +134,8 @@ public class RobotContainer {
                 ClawevatorSubsystem.ToggleClawRotatePID();
                 ClawevatorSubsystem.ToggleElevatorPID();
                 SmartDashboard.putData("ForwardUntilNoAprilTag", new ForwardUntilNoAprilTag(robotDrive, vision, 0.1));
-                SmartDashboard.putData("AutoGetAlgae", new AutoGetAlgae2(robotDrive, ClawevatorSubsystem, vision));
+                SmartDashboard.putData("AutoGetAlgae2", new AutoGetAlgae2(robotDrive, ClawevatorSubsystem, vision));
+                SmartDashboard.putData("AutoGetAlgae1", new AutoGetAlgae1(robotDrive, ClawevatorSubsystem, vision));
                 SmartDashboard.putData(climber);
         }
 
@@ -172,7 +176,7 @@ public class RobotContainer {
                 driverController.x().whileTrue(new ShootClaw(ClawevatorSubsystem));
                 driverController.y().whileTrue(new RunClaw(ClawevatorSubsystem, () -> -0.25));
                 driverController.a().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.5));
-                driverController.b().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.05));
+                driverController.b().whileTrue(new RunClaw(ClawevatorSubsystem, () -> 0.1));
                 // driverController.start().whileTrue(new DoTheClimb(climber));
 
                 // coral level 3

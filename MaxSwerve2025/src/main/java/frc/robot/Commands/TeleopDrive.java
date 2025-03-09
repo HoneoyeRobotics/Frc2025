@@ -12,17 +12,20 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class TeleopDrive extends Command {
   private final DriveSubsystem driveSubsystem;
 
   private final CommandXboxController driverController;
+  private final VisionSubsystem visionSubsystem;
 
   /** Creates a new CenterOnAprilTag. */
-  public TeleopDrive(DriveSubsystem driveSubsystem, CommandXboxController driverController) {
+  public TeleopDrive(DriveSubsystem driveSubsystem, CommandXboxController driverController, VisionSubsystem visionSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveSubsystem = driveSubsystem;
+    this.visionSubsystem = visionSubsystem;
     this.driverController = driverController;
     addRequirements(driveSubsystem);
   }
@@ -68,10 +71,15 @@ public class TeleopDrive extends Command {
 
         // strafe
         // double strafekP = .03;
-        double xoffset = -15;
+        double xoffset = -15;        
         double currentTX = LimelightHelpers.getTX("limelight-drive");
+
+        xoffset  = (-0.911955 * visionSubsystem.getA()) - 4.56205;
+
         double diffTXtoTarget = currentTX - xoffset;// ex at 23, needs to be at -15, so should be 38
-        yPidController.setSetpoint(-15);
+
+        
+        yPidController.setSetpoint(xoffset);
         double strafePower = yPidController.calculate(currentTX) * -1;
 
         // double strafeVelocity = (diffTXtoTarget) * strafekP; // if 39, should be
@@ -119,6 +127,9 @@ public class TeleopDrive extends Command {
         double degreesOff = 0;
         degreesOff = targetRotation - heading;
 
+
+
+         degreesOff = visionSubsystem.getRotation();
         // if(heading < 0){
         // closest *= -1;
         // }

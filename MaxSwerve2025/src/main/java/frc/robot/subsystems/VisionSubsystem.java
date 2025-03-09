@@ -112,6 +112,9 @@ public class VisionSubsystem extends SubsystemBase {
   public double getY() {
     return ty.getDouble(0.0);
   }
+  public double getA() {
+    return ta.getDouble(0.0);
+  }
 
   public boolean canSeeTag() {
 
@@ -125,8 +128,8 @@ public class VisionSubsystem extends SubsystemBase {
     var pose = new double[6];
     pose = targetpose_cameraspace.getDoubleArray(new double[] {0,0,0,0,0,0});
 
-    SmartDashboard.putNumber("RotToApril", pose[5]);
-    return pose[5];
+    SmartDashboard.putNumber("RotToApril", pose[4]);
+    return pose[4];
 
   }
 

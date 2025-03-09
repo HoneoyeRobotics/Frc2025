@@ -47,6 +47,9 @@ public class ForwardUntilNoAprilTag extends Command {
   @Override
   public boolean isFinished() {
     //return visionSubsystem.canSeeTag() && visionSubsystem.getOnTarget();
+    if (visionSubsystem.canSeeTag() && visionSubsystem.getX() > 12)
+      return true;
+
     return visionSubsystem.canSeeTag() == false;
   }
 }

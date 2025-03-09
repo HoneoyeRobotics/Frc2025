@@ -15,6 +15,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,6 +51,7 @@ public class ClawevatorSubsystem extends SubsystemBase {
     upperClawMotor.setInverted(true);
     rotatePidController = new PIDController(2, 0.6, 0.01);
     rotatePidController.setSetpoint(RotatePIDSetpoint);
+
     // rotatePidController.setTolerance(0.01);
 
     leftElevator = new SparkMax(CanIDs.leftElevator, MotorType.kBrushless);
@@ -167,16 +169,60 @@ public class ClawevatorSubsystem extends SubsystemBase {
   // overrides
   @Override
   public void periodic() {
-
+    if (DriverStation.isDisabled())
+      return;
     // claw functions
     double RotateSpeed = 0;
     double clawPosition = rotateMotor.getAbsoluteEncoder().getPosition();
 
-    rotatePidController.setP(Preferences.getDouble("ClawP", 2));
-    rotatePidController.setI(Preferences.getDouble("ClawI", 0.6));
-    rotatePidController.setD(Preferences.getDouble("ClawD", 0.001));
+    switch (SetPosition) {
 
+      case Coral2:
+      case Coral3:
+      case Feeder:
+
+        rotatePidController.setP(2);
+        rotatePidController.setI(0);
+        rotatePidController.setD(0);
+        break;
+
+      case Pickup:
+
+        rotatePidController.setP(2);
+        rotatePidController.setI(0.4);
+        rotatePidController.setD(0.3);
+
+        break;
+      case Home:
+      case Algae1:
+      case Algae2:
+      case Shoot:
+      case Stack:
+      case Drive:
+      default:
+        rotatePidController.setP(2);
+        rotatePidController.setI(0.6);
+        rotatePidController.setD(0.001);
+        rotatePidController.setP(Preferences.getDouble("ClawP", 2));
+        rotatePidController.setI(Preferences.getDouble("ClawI", 0.6));
+        rotatePidController.setD(Preferences.getDouble("ClawD", 0.001));
+
+        break;
+    }
     RotateSpeed = rotatePidController.calculate(clawPosition) * 1;
+
+    // set max power if its close...
+    // if (SetPosition == ClawevatorPositions.Coral2 || SetPosition == ClawevatorPositions.Coral3) {
+    //   // going down
+    //   if (RotateSpeed < 0) {
+    //     if (clawPosition < 0.44  && clawPosition < 0.43   && RotateSpeed < -0.2){
+          
+    //       System.out.println("Killed power due to speed " + RotateSpeed + " at position " + clawPosition);
+    //       RotateSpeed = 0;
+    //     }
+    //   }
+    // }
+
     rotateMotor.set(RotateSpeed);
     SmartDashboard.putNumber("Claw Speed", RotateSpeed);
 
